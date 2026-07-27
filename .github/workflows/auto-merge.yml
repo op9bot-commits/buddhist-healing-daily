@@ -25,6 +25,7 @@ jobs:
                 pull_number: pr.number,
                 draft: false,
               });
+              await new Promise((r) => setTimeout(r, 5000));
             }
             await github.rest.pulls.merge({
               owner: context.repo.owner,
