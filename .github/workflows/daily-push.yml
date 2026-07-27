@@ -1,0 +1,43 @@
+name: Daily Push
+
+on:
+  schedule:
+    # 每天北京时间 08:00 = UTC 00:00
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  push:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Generate daily report
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          OPENAI_BASE_URL: ${{ secrets.OPENAI_BASE_URL }}
+          OPENAI_MODEL: ${{ vars.OPENAI_MODEL || 'gpt-4o-mini' }}
+        run: python scripts/generate_daily.py
+
+      - name: Push to main
+        run: |
+          TODAY=$(TZ=Asia/Shanghai date +%Y-%m-%d)
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add "日报/${TODAY}.md"
+          if git diff --cached --quiet; then
+            echo "No changes to push."
+            exit 0
+          fi
+          git commit -m "chore: 日报 ${TODAY}"
+          git push origin main
