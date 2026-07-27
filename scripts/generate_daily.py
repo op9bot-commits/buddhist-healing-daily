@@ -32,7 +32,7 @@ def latest_sample() -> str:
 def call_llm(prompt: str) -> str:
     api_key = os.environ.get("OPENAI_API_KEY", "").strip()
     base_url = os.environ.get("OPENAI_BASE_URL", "https://api.openai.com/v1").rstrip("/")
-    model = os.environ.get("OPENAI_MODEL", "gpt-4o-mini")
+    model = os.environ.get("OPENAI_MODEL", "agnes-2.0-flash")
 
     if not api_key:
         raise SystemExit("OPENAI_API_KEY is not set")
@@ -69,7 +69,12 @@ def call_llm(prompt: str) -> str:
         detail = exc.read().decode("utf-8", errors="replace")
         raise SystemExit(f"LLM API error {exc.code}: {detail}") from exc
 
-    content = data["choices"][0]["message"]["content"].strip()
+    choice = data.get("choices", [{}])[0]
+    message = choice.get("message") or {}
+    content = message.get("content")
+    if not content:
+        raise SystemExit(f"LLM returned empty content: {json.dumps(data, ensure_ascii=False)[:2000]}")
+    content = content.strip()
     if content.startswith("```"):
         lines = content.splitlines()
         if lines[0].startswith("```"):

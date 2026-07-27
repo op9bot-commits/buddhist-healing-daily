@@ -17,19 +17,33 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Check if report exists
+        id: check
+        run: |
+          TODAY=$(TZ=Asia/Shanghai date +%Y-%m-%d)
+          if [ -f "日报/${TODAY}.md" ]; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+            echo "Report already on main: 日报/${TODAY}.md"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Setup Python
+        if: steps.check.outputs.exists != 'true'
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
 
       - name: Generate daily report
+        if: steps.check.outputs.exists != 'true'
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           OPENAI_BASE_URL: ${{ secrets.OPENAI_BASE_URL }}
-          OPENAI_MODEL: ${{ vars.OPENAI_MODEL || 'gpt-4o-mini' }}
+          OPENAI_MODEL: ${{ vars.OPENAI_MODEL || 'agnes-2.0-flash' }}
         run: python scripts/generate_daily.py
 
       - name: Push to main
+        if: steps.check.outputs.exists != 'true'
         run: |
           TODAY=$(TZ=Asia/Shanghai date +%Y-%m-%d)
           git config user.name "github-actions[bot]"
