@@ -38,7 +38,7 @@ jobs:
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           OPENAI_BASE_URL: ${{ secrets.OPENAI_BASE_URL }}
-          OPENAI_MODEL: ${{ vars.OPENAI_MODEL || 'agnes-2.0-flash' }}
+          OPENAI_MODEL: ${{ vars.OPENAI_MODEL || 'agnes-3.0-flash' }}
         run: python scripts/generate_daily.py
 
       - name: Push to main

@@ -32,7 +32,7 @@ def latest_sample() -> str:
 def call_llm(prompt: str) -> str:
     api_key = os.environ.get("OPENAI_API_KEY", "").strip()
     base_url = os.environ.get("OPENAI_BASE_URL", "https://api.openai.com/v1").rstrip("/")
-    model = os.environ.get("OPENAI_MODEL", "agnes-2.0-flash")
+    model = os.environ.get("OPENAI_MODEL", "agnes-3.0-flash")
 
     if not api_key:
         raise SystemExit("OPENAI_API_KEY is not set")
