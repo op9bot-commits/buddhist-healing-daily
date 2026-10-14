@@ -2,7 +2,7 @@ name: Daily Push
 
 on:
   schedule:
-    - cron: '39 5 * * *'
+    - cron: '0 14 * * *'
   workflow_dispatch:
 
 permissions:
