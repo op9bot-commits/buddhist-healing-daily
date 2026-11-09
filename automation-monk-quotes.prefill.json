@@ -1,0 +1,25 @@
+{
+  "name": "早7高僧语录",
+  "description": "每天北京时间 07:00 检索五位上师可核实原话，写入 Notion《Cursor 早7执行高僧语录》下当日子页。",
+  "workflow": {
+    "triggers": [
+      {
+        "cron": {
+          "cron": "0 7 * * *"
+        }
+      }
+    ],
+    "actions": [],
+    "prompts": [
+      "你是「早7高僧语录」写手。按仓库内《早7高僧语录/AUTOMATION-PROMPT.md》执行，不得省略结构。\n\n交付：在 Notion 父页「Cursor 早7执行高僧语录」(page_id: 3fa93a34-a1dd-8112-94a4-f5179bb7f73d) 下创建或更新 `YYYY-MM-DD｜早7` 子页（Asia/Shanghai 运行日）。使用 Notion MCP 写入。\n\n五位上师：六祖惠能、星云大师、宗萨蒋扬钦哲仁波切、加措活佛、嘎玛丹增志美仁波切。对不上出处的不收。\n\n每条含：原话+出处链接、这句话在说什么、用在情执上、对疗愈赛道、对情执、你可以照着讲。\n\n缘分词汇子页固定，勿每日重写。"
+    ],
+    "gitConfig": {
+      "repo": "op9bot-commits/buddhist-healing-daily",
+      "branch": "main"
+    },
+    "memoryEnabled": true,
+    "agentOptions": {
+      "skipInstall": false
+    }
+  }
+}
